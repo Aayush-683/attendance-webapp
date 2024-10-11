@@ -19,13 +19,4 @@
     <servlet-name>TeacherServlet</servlet-name>
     <url-pattern>/TeacherServlet</url-pattern>
   </servlet-mapping>
-  <filter>
-    <display-name>DivisionDAO</display-name>
-    <filter-name>DivisionDAO</filter-name>
-    <filter-class>dao.DivisionDAO</filter-class>
-  </filter>
-  <filter-mapping>
-    <filter-name>DivisionDAO</filter-name>
-    <url-pattern>/DivisionDAO</url-pattern>
-  </filter-mapping>
 </web-app>

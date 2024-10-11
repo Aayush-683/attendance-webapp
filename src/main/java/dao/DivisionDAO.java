@@ -9,7 +9,6 @@ import java.util.List;
 
 import Utils.Database;
 import models.Division;
-import models.Student;
 
 public class DivisionDAO {
     // Method to get all divisions
