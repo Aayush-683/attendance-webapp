@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="https://jakarta.ee/xml/ns/jakartaee" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd" version="6.0">
+  <display-name>attendance webapp</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>TeacherServlet</display-name>
+    <servlet-name>TeacherServlet</servlet-name>
+    <servlet-class>servlets.TeacherServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TeacherServlet</servlet-name>
+    <url-pattern>/TeacherServlet</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <display-name>DivisionDAO</display-name>
+    <filter-name>DivisionDAO</filter-name>
+    <filter-class>dao.DivisionDAO</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>DivisionDAO</filter-name>
+    <url-pattern>/DivisionDAO</url-pattern>
+  </filter-mapping>
+</web-app>
