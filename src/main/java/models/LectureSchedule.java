@@ -1,5 +1,7 @@
 package models;
 
+import java.time.LocalTime;
+
 public class LectureSchedule {
     private int scheduleId;
     private int courseId;
@@ -35,9 +37,6 @@ public class LectureSchedule {
     }
 
     // Getters and Setters
-    public int getScheduleId() { return scheduleId; }
-    public void setScheduleId(int scheduleId) { this.scheduleId = scheduleId; }
-
     public int getCourseId() { return courseId; }
     public void setCourseId(int courseId) { this.courseId = courseId; }
 
@@ -64,4 +63,5 @@ public class LectureSchedule {
 
     public String getTeacherName() { return teacherName; }
     public void setTeacherName(String teacherName) { this.teacherName = teacherName; }
+    
 }

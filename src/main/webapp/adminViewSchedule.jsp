@@ -3,10 +3,11 @@
 <html>
 <head>
     <title>View Lecture Schedule</title>
-    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles.css">
 </head>
 <body>
     <h1>Lecture Schedule</h1>
+    <a href="AdminServlet">Back to Dashboard</a>
     <table border="1">
         <thead>
             <tr>
@@ -16,7 +17,6 @@
                 <th>Day</th>
                 <th>Start Time</th>
                 <th>End Time</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -32,13 +32,6 @@
                             <td><%= schedule.getLectureDay() %></td>
                             <td><%= schedule.getStartTime() %></td>
                             <td><%= schedule.getEndTime() %></td>
-                            <td>
-                                <form action="AdminServlet" method="post">
-                                    <input type="hidden" name="action" value="deleteSchedule">
-                                    <input type="hidden" name="scheduleId" value="<%= schedule.getScheduleId() %>">
-                                    <input type="submit" value="Delete">
-                                </form>
-                            </td>
                         </tr>
             <%
                     }

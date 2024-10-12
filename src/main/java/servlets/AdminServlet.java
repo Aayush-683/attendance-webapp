@@ -9,6 +9,7 @@ import dao.LSDAO;
 import dao.StudentDAO;
 import dao.TeacherDAO;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -23,6 +24,7 @@ import models.User;
 /**
  * Servlet implementation class TeacherServlet
  */
+@WebServlet("/AdminServlet")
 public class AdminServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -47,6 +49,7 @@ public class AdminServlet extends HttpServlet {
 		}
 		
 		String action = request.getParameter("action");
+		if (action == null) action = "";
         if ("viewTeachers".equals(action)) {
             List<Teacher> teachers = TeacherDAO.getAllTeachers();
             request.setAttribute("teachers", teachers);
@@ -63,7 +66,7 @@ public class AdminServlet extends HttpServlet {
             List<Division> divisions = DivisionDAO.getAllDivisions();
             request.setAttribute("divisions", divisions);
             request.getRequestDispatcher("/adminViewDivisions.jsp").forward(request, response);
-        } else if (("viewSchedule").equals(action)) {
+        } else if (("viewSchedules").equals(action)) {
         	List<LectureSchedule> lectures = LSDAO.getAllSchedules();
         	request.setAttribute("lectures", lectures);
         	request.getRequestDispatcher("/adminViewSchedule.jsp").forward(request, response);
@@ -72,23 +75,39 @@ public class AdminServlet extends HttpServlet {
         	if ("add".equals(parts[0])) {
         		if ("teacher".equals(parts[1])) {
         			request.setAttribute("type", "teacher");
-        			request.getRequestDispatcher("/admin_add.jsp").forward(request, response);
+        			request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
     			} else if ("student".equals(parts[1])) {
     				request.setAttribute("type", "student");
-    				request.getRequestDispatcher("/admin_add.jsp").forward(request, response);
+    				request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
 				} else if ("course".equals(parts[1])) {
 					request.setAttribute("type", "course");
-					request.getRequestDispatcher("/admin_add.jsp").forward(request, response);
+					request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
 				} else if ("division".equals(parts[1])) {
 					request.setAttribute("type", "division");
-					request.getRequestDispatcher("/admin_add.jsp").forward(request, response);
-				} else if ("schedule".equals(parts[1])) {
+					request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
+				} else if ("LectureSchedule".equals(parts[1])) {
+					List<Teacher> teachers = TeacherDAO.getAllTeachers();
+					List<Division> divisions = DivisionDAO.getAllDivisions();
+					List<Course> courses = CourseDAO.getAllCourses();
+					request.setAttribute("teachers", teachers);
+					request.setAttribute("divisions", divisions);
+					request.setAttribute("courses", courses);
 					request.getRequestDispatcher("/adminAddSchedule.jsp").forward(request, response);
 				}
         	} 
         } else {
             // Default: show the admin dashboard
-            request.getRequestDispatcher("/admin_dashboard.jsp").forward(request, response);
+        	List<Teacher> teachers = TeacherDAO.getAllTeachers();
+        	List<Student> students = StudentDAO.getAllStudents();
+        	List<Course> courses = CourseDAO.getAllCourses();
+        	List<Division> divisions = DivisionDAO.getAllDivisions();
+        	List<LectureSchedule> schedules = LSDAO.getAllSchedules();
+        	request.setAttribute("totalTeachers", teachers.size());
+        	request.setAttribute("totalStudents", students.size());
+        	request.setAttribute("totalCourses", courses.size());
+        	request.setAttribute("totalDivisions", divisions.size());
+        	request.setAttribute("totalSchedules", schedules.size());
+            request.getRequestDispatcher("/adminDashboard.jsp").forward(request, response);
         }
 	}
 
@@ -176,14 +195,14 @@ public class AdminServlet extends HttpServlet {
 					response.sendRedirect("AdminServlet?action=viewSchedule");
 				} else if (action.equals("addSchedule")) {
 					// Add a new schedule
-					String day = request.getParameter("day");
+					String day = request.getParameter("lectureDay");
 					String startTime = request.getParameter("startTime");
 					String endTime = request.getParameter("endTime");
-					String teacherEmail = request.getParameter("teacherEmail");
-					String divisionId = request.getParameter("divisionId");
-					String courseId = request.getParameter("courseId");
-					LectureSchedule schedule = new LectureSchedule(day, startTime, endTime, teacherEmail, divisionId, courseId);
-					LSDAO.addLectureSchedule(schedule);
+					String teacherName = request.getParameter("teacherId");
+					String divisionName = request.getParameter("divisionId");
+					String courseName = request.getParameter("courseId");
+					LectureSchedule schedule = new LectureSchedule(courseName, divisionName, teacherName, day, startTime, endTime);
+					LSDAO.addLectureScheduleByName(schedule);
 					response.sendRedirect("AdminServlet?action=viewSchedule");
 	            }
 	        } 

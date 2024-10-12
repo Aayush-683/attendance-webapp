@@ -1,14 +1,15 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="java.util.List"%>
 <%@page import="models.Student"%>
+<%@page import="dao.DivisionDAO"%>
 <html>
 <head>
     <title>View Students</title>
-    <link rel="stylesheet" href="assets/adminStyles.css">
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
     <h1>Manage Students</h1>
-    <a href="admin_dashboard.jsp">Back to Dashboard</a>
+    <a href="AdminServlet">Back to Dashboard</a>
 
     <table border="1">
         <thead>
@@ -25,7 +26,7 @@
                 <tr>
                     <td><%= student.getName() %></td>
                     <td><%= student.getEmail() %></td>
-                    <td><%= student.getDivisionId() %></td>
+                    <td><%= DivisionDAO.getDivisionNameById(student.getDivisionId()) %></td>
 				<td>
 					<form action="AdminServlet" method="post">
                         <input type="hidden" name="action" value="deleteStudent">

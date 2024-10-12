@@ -1,32 +1,49 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<!DOCTYPE html>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@page import="java.util.List"%>
+<%@page import="models.Teacher"%>
+<%@page import="models.Student"%>
+<%@page import="models.Course"%>
+<%@page import="models.LectureSchedule"%>
+<%@page import="models.Division"%>
+<%@page import="dao.StudentDAO"%>
+<%@page import="dao.TeacherDAO"%>
+<%@page import="dao.CourseDAO"%>
 <html>
 <head>
     <title>Student Dashboard</title>
     <link rel="stylesheet" type="text/css" href="assets/styles.css">
 </head>
 <body>
-    <h2>Welcome, Student</h2>
-    <h3>Your Courses</h3>
+    <h1>Welcome, ${studentName} | ${divisionName}</h1>
+
+    <h2>Your Courses</h2>
     <ul>
-        <!-- Use JSTL or a scriptlet to loop through courses -->
-        <li>Course 1 - Attendance: 85%</li>
-        <li>Course 2 - Attendance: 90%</li>
-    </ul>
-    
-    <h3>Your Schedule for Today</h3>
+    	<% List<Course> courses = (List<Course>) request.getAttribute("courses"); %>
+		<% for (Course course : courses) { %>
+			<li><%= course.getName() %>: <%= StudentDAO.getAttendancePerc(course.getName(), (String) request.getAttribute("studentName")) %>%</li>
+		<% } %>
+	</ul>
+
+    <h2>Today's Schedule</h2>
     <table border="1">
         <tr>
-            <th>Time</th>
             <th>Course</th>
             <th>Teacher</th>
+            <th>Start Time</th>
+            <th>End Time</th>
         </tr>
-        <tr>
-            <td>10:00 - 11:00 AM</td>
-            <td>Course 1</td>
-            <td>Professor Alan</td>
-        </tr>
-    </table>
+        <% List<LectureSchedule> schedules = (List<LectureSchedule>) request.getAttribute("todaySchedule"); %>
+		<% if (request.getAttribute("todaySchedule") != null) { %>
+			<% for (LectureSchedule schedule : schedules) { %>
+				<tr>
+					<td><%= schedule.getCourseName() %></td>
+					<td><%= schedule.getTeacherName() %></td>
+					<td><%= schedule.getStartTime() %></td>
+					<td><%= schedule.getEndTime() %></td>
+				</tr>
+			<% } %>
+		<% } %>
+	</table>
 
     <a href="authLogout">Logout</a>
 </body>

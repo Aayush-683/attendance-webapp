@@ -7,11 +7,11 @@
 <html>
 <head>
     <title>View Teachers</title>
-    <link rel="stylesheet" href="assets/adminStyles.css">
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
     <h1>Manage Teachers</h1>
-    <a href="admin_dashboard.jsp">Back to Dashboard</a>
+    <a href="AdminServlet">Back to Dashboard</a>
 
     <table border="1">
         <thead>

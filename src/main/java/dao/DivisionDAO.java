@@ -28,7 +28,7 @@ public class DivisionDAO {
         return divisions;
     }
 
-    // Method to get division by ID
+    // Method to get division by name
 	public static int getDivisionIdByName(String divisionName) {
         String query = "SELECT * FROM divisions WHERE division_name = ?";
         try (Connection connection = Database.getConnection()) {
@@ -42,6 +42,22 @@ public class DivisionDAO {
             e.printStackTrace();
         }
         return -1;
+	}
+	
+	// Method to get division by id
+	public static String getDivisionNameById(int divisionId) {
+        String query = "SELECT * FROM divisions WHERE division_id = ?";
+        try (Connection connection = Database.getConnection()) {
+        	PreparedStatement ps = connection.prepareStatement(query);
+            ps.setInt(1, divisionId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getString("division_name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
 	}
 	
     // Method to add a division

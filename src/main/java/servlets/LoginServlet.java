@@ -36,13 +36,13 @@ public class LoginServlet extends HttpServlet {
 			// Check user role
 			User user = (User) session.getAttribute("user");
 			if (user.getRole().equals("admin")) {
-				response.sendRedirect("adminDashboard.jsp");
+				response.sendRedirect("AdminServlet");
 				return;
 			} else if (user.getRole().equals("teacher")) {
-				response.sendRedirect("teacherDashboard.jsp");
+				response.sendRedirect("TeacherServlet");
 				return;
 			} else {
-				response.sendRedirect("studentDashboard.jsp");
+				response.sendRedirect("StudentServlet");
 				return;
 			}
 		} else {
@@ -71,11 +71,11 @@ public class LoginServlet extends HttpServlet {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
             if (user.getRole().equals("admin")) {
-                response.sendRedirect("adminDashboard.jsp");
+                response.sendRedirect("AdminServlet");
             } else if (user.getRole().equals("teacher")) {
-                response.sendRedirect("teacherDashboard.jsp");
+                response.sendRedirect("TeacherServlet");
             } else {
-                response.sendRedirect("studentDashboard.jsp");
+                response.sendRedirect("StudentServlet");
             }
         } else {
             response.sendRedirect("authLogin?error=invalid");

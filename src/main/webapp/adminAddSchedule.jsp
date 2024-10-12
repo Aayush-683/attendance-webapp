@@ -9,6 +9,8 @@
 </head>
 <body>
     <h1>Add Lecture Schedule</h1>
+    <a href="AdminServlet">Back to Dashboard</a>
+    
     <form action="AdminServlet" method="post">
         <input type="hidden" name="action" value="addSchedule">
 

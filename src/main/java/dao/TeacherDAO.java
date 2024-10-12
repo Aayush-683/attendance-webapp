@@ -11,6 +11,7 @@ import Utils.Database;
 import models.Course;
 import models.Division;
 import models.Teacher;
+import models.User;
 
 public class TeacherDAO {
     public static List<Teacher> getAllTeachers() {
@@ -21,7 +22,13 @@ public class TeacherDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                teachers.add(new Teacher(rs.getString("name"), rs.getString("email"), rs.getString("password")));
+                String query2 = "SELECT * FROM users WHERE user_id = ?";
+                PreparedStatement stmt2 = connection.prepareStatement(query2);
+                stmt2.setInt(1, rs.getInt("user_id"));
+                ResultSet rs2 = stmt2.executeQuery();
+                if (rs2.next()) {
+                    teachers.add(new Teacher(rs2.getString("name"), rs2.getString("email"), rs2.getString("password")));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -62,20 +69,25 @@ public class TeacherDAO {
         }
 	}
 	
-	public static Teacher getTeacherByEmail(String teacherId) {
-		Teacher teacher = null;
-		String query = "SELECT * FROM teachers WHERE email = ?";
+	public static Teacher getTeacherByEmail(String email) {
+		String query = "SELECT * FROM users WHERE email = ?";
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement ps = connection.prepareStatement(query);
-			ps.setString(1, teacherId);
+			ps.setString(1, email);
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
-				teacher = new Teacher(rs.getString("name"), rs.getString("email"), rs.getString("password"));
+				String query2 = "SELECT * FROM teachers WHERE user_id = ?";
+				PreparedStatement ps2 = connection.prepareStatement(query2);
+				ps2.setInt(1, rs.getInt("user_id"));
+				ResultSet rs2 = ps2.executeQuery();
+				if (rs2.next()) {
+					return new Teacher(rs.getString("name"), rs.getString("email"), rs.getString("password"));
+				}
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return teacher;
+		return null;
 	}
 	
 	public static Teacher getTeacherById(int teacher) {
@@ -94,16 +106,44 @@ public class TeacherDAO {
 		return teacher1;
 	}
 	
+	public static int getTeacherIdByUser(User user) {
+		String query = "SELECT * FROM users WHERE email = ?";
+		try (Connection connection = Database.getConnection()) {
+			PreparedStatement ps = connection.prepareStatement(query);
+			ps.setString(1, user.getEmail());
+			ResultSet rs = ps.executeQuery();
+			if (rs.next()) {
+				String query2 = "SELECT * FROM teachers WHERE user_id = ?";
+				PreparedStatement ps2 = connection.prepareStatement(query2);
+				ps2.setInt(1, rs.getInt("user_id"));
+				ResultSet rs2 = ps2.executeQuery();
+				if (rs2.next()) {
+					return rs2.getInt("teacher_id");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+	
 	public static List<Division> getAllDivisions(String teacherEmail) {
 		List<Division> divisions = new ArrayList<>();
-        String query = "SELECT * FROM teachers WHERE email = ?";
+        String query = "SELECT * FROM users WHERE email = ?";
         int TeacherID = -1;
         try (Connection connection = Database.getConnection()) {
             PreparedStatement ps = connection.prepareStatement(query);
             ps.setString(1, teacherEmail);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                TeacherID = rs.getInt("teacher_id");
+				int userID = rs.getInt("user_id");
+				String query1 = "SELECT * FROM teachers WHERE user_id = ?";
+				PreparedStatement ps1 = connection.prepareStatement(query1);
+				ps1.setInt(1, userID);
+				ResultSet rs1 = ps1.executeQuery();
+				while (rs1.next()) {
+					TeacherID = rs1.getInt("teacher_id");
+				}
             }
 			if (TeacherID < 0) {
 				return null;
@@ -130,14 +170,21 @@ public class TeacherDAO {
 	
 	public static List<Course> getAllCourses(String teacherEmail) {
 		List<Course> courses = new ArrayList<>();
-		String query = "SELECT * FROM teachers WHERE email = ?";
+		String query = "SELECT * FROM users WHERE email = ?";
 		int TeacherID = -1;
 		try (Connection connection = Database.getConnection()) {
 			PreparedStatement ps = connection.prepareStatement(query);
 			ps.setString(1, teacherEmail);
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) {
-				TeacherID = rs.getInt("teacher_id");
+				int userID = rs.getInt("user_id");
+				String query1 = "SELECT * FROM teachers WHERE user_id = ?";
+				PreparedStatement ps1 = connection.prepareStatement(query1);
+				ps1.setInt(1, userID);
+				ResultSet rs1 = ps1.executeQuery();
+				while (rs1.next()) {
+                    TeacherID = rs1.getInt("teacher_id");
+				}
 			}
 			if (TeacherID < 0) {
 				return null;
@@ -160,5 +207,60 @@ public class TeacherDAO {
 			e.printStackTrace();
 		}
 		return courses;
+	}
+	
+	public static String getNameById(int id) {
+		try (Connection connection = Database.getConnection()) {
+			String query = "SELECT * FROM teachers WHERE teacher_id = ?";
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setInt(1, id);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				String query2 = "SELECT * FROM users WHERE user_id = ?";
+				PreparedStatement stmt2 = connection.prepareStatement(query2);
+				stmt2.setInt(1, rs.getInt("user_id"));
+				ResultSet rs2 = stmt2.executeQuery();
+				if (rs2.next()) {
+					return rs2.getString("name");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static int getIdByName(String name) {
+		try (Connection connection = Database.getConnection()) {
+			String query = "SELECT * FROM users WHERE name = ?";
+			PreparedStatement stmt = connection.prepareStatement(query);
+			stmt.setString(1, name);
+			ResultSet rs = stmt.executeQuery();
+			if (rs.next()) {
+				String query2 = "SELECT * FROM teachers WHERE user_id = ?";
+				PreparedStatement stmt2 = connection.prepareStatement(query2);
+				stmt2.setInt(1, rs.getInt("user_id"));
+				ResultSet rs2 = stmt2.executeQuery();
+				if (rs2.next()) {
+					return rs2.getInt("teacher_id");
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return -1;
+	}
+
+	public static void assignCourse(int courseId, int teacherId, int divisionId) {
+		try (Connection connection = Database.getConnection()) {
+            String query = "INSERT INTO teacher_course (course_id, teacher_id, division_id) VALUES (?, ?, ?)";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setInt(1, courseId);
+            stmt.setInt(2, teacherId);
+            stmt.setInt(3, divisionId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 	}
 }

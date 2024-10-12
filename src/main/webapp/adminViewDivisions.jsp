@@ -6,11 +6,11 @@
 <html>
 <head>
     <title>View Divisions</title>
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/assets/styles.css">
+    <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
     <h1>Manage Divisions</h1>
-    <a href="admin_dashboard.jsp">Back to Dashboard</a>
+    <a href="AdminServlet">Back to Dashboard</a>
 
     <table border="1">
         <thead>
