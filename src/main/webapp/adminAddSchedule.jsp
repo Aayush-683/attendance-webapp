@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Add Lecture Schedule</title>
-    <link rel="stylesheet" type="text/css" href="assets/style.css">
+    <link rel="stylesheet" type="text/css" href="assets/styles.css">
 </head>
 <body>
     <h1>Add Lecture Schedule</h1>

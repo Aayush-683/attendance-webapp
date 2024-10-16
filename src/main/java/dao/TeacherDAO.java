@@ -54,15 +54,9 @@ public class TeacherDAO {
 	public static void deleteTeacher(String teacher) {
 		// Logic to delete a teacher from the database
         try (Connection connection = Database.getConnection()) {
-            String query = "DELETE FROM teachers WHERE email = ?";
+            String query = "DELETE FROM users WHERE email = ?";
             PreparedStatement stmt = connection.prepareStatement(query);
             stmt.setString(1, teacher);
-            stmt.executeUpdate();
-            // Delete from users table as well
-            query = "DELETE FROM users WHERE email = ?";
-            Teacher teacher1 = getTeacherByEmail(teacher);
-            stmt = connection.prepareStatement(query);
-            stmt.setString(1, teacher1.getEmail());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -63,7 +63,7 @@ public class MarkAttendance extends HttpServlet {
         LectureSchedule currentSchedule = null;
 		
         for (LectureSchedule schedule : schedules) {
-			LocalTime currentTime = LocalTime.parse("11:00:00"); // LocalTime.now()
+			LocalTime currentTime = LocalTime.now();
 			LocalTime startTime = LocalTime.parse(schedule.getStartTime());
 			LocalTime endTime = LocalTime.parse(schedule.getEndTime());
 			if (currentTime.isAfter(startTime) && currentTime.isBefore(endTime)) {

@@ -73,19 +73,7 @@ public class AdminServlet extends HttpServlet {
         } else if (action.contains("-")) {
         	String[] parts = action.split("-");
         	if ("add".equals(parts[0])) {
-        		if ("teacher".equals(parts[1])) {
-        			request.setAttribute("type", "teacher");
-        			request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
-    			} else if ("student".equals(parts[1])) {
-    				request.setAttribute("type", "student");
-    				request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
-				} else if ("course".equals(parts[1])) {
-					request.setAttribute("type", "course");
-					request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
-				} else if ("division".equals(parts[1])) {
-					request.setAttribute("type", "division");
-					request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
-				} else if ("LectureSchedule".equals(parts[1])) {
+        		if ("LectureSchedule".equals(parts[1])) {
 					List<Teacher> teachers = TeacherDAO.getAllTeachers();
 					List<Division> divisions = DivisionDAO.getAllDivisions();
 					List<Course> courses = CourseDAO.getAllCourses();
@@ -93,6 +81,10 @@ public class AdminServlet extends HttpServlet {
 					request.setAttribute("divisions", divisions);
 					request.setAttribute("courses", courses);
 					request.getRequestDispatcher("/adminAddSchedule.jsp").forward(request, response);
+				} else {
+					String type = parts[1];
+					request.setAttribute("type", type);
+        			request.getRequestDispatcher("/adminAdd.jsp").forward(request, response);
 				}
         	} 
         } else {
@@ -160,7 +152,6 @@ public class AdminServlet extends HttpServlet {
 	            } else if (action.equals("addDivision")) {
 	                // Add a new division
 	                String divisionName = request.getParameter("divisionName");
-	                int courseId = Integer.parseInt(request.getParameter("courseId"));
 	                Division division = new Division(divisionName);
 	                DivisionDAO.addDivision(division);
 	                response.sendRedirect("AdminServlet?action=viewDivisions");
